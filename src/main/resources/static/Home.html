@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<script>
+    $(document).ready(() => {
+        getAllUsers();
+    });
+
+    function getAllUsers() {
+        $.ajax({
+            url: "/rest/users/",
+            method: "GET",
+            success: response => {
+                displayUsers(response);
+            },
+            error: err => {
+                let responseObj = err.responseJSON;
+                alert(`ERROR: " ${responseObj.message} " TIME ${responseObj.time}`);
+            }
+        })
+    }
+    function  displayUsers(users) {
+        if (users.length > 0) {
+            let placeholder = "";
+            $.each(users, (index, user) => {
+                placeholder +=
+                    `<tr>;
+                <input class='user-id' type='hidden' value='${user.id}'>
+                <td>${(index + 1)}</td>;
+                <td>${user.name} ${user.surname}</td>
+                <td><button class='update-user'>Update</button></td>
+                <td><button class='delete-user'>Delete</button></td>
+            </tr>`;
+            });
+            $("#users-placeholder tbody").html(placeholder);
+        } else {
+            $("#users-div").html("<p>No users in the system.</p>");
+        }
+    }
+
+</script>
+
+<table id="users-placeholder tbody"></table>
+</body>
+</html>
